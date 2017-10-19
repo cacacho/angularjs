@@ -1,0 +1,43 @@
+<html ng-app="mpApp">
+    <head>
+        <title>Proyecto Final Curso AngularJS MP</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/lib/angular.js"></script>
+        <script src="js/lib/angular-route.js"></script>
+        <script src="js/lib/angular-ui-router.js"></script>
+        <script src="js/lib/ocLazyLoad.js"></script>
+        <script src="js/lib/angular-resource.js"></script>
+        <script src="app/app.js"></script>
+       
+        <!-- orden logico -->
+        <script src="app/ui/module.js"></script>
+        <script src="app/public/module.js"></script>
+
+    </head>
+    <body data-smart-page-title="">
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Proyecto Final Curso AngularJS</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a  ui-sref="public.tareas">Tareas</a></li>
+                    <li><a  ui-sref="public.categorias">Categorías</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="jumbotron">
+            <div class="container">
+                <h1>Gestión de tareas</h1>
+                <p>Proyecto creado para gestionar Tareas.</p>
+            </div>
+        </div>
+        <div class="container">
+            <div ui-view="root@app"></div>
+        </div>
+    </body>
+</html>

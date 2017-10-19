@@ -1,0 +1,23 @@
+<div id="demo2"ng-controller="norrisController">
+
+    <h1>Chuck norris dice</h1>
+
+    <div>
+
+        <label>Ingrese busqueda </label>
+
+        <input type="text" ng-model="search" placeholder="Busqueda" />
+
+    </div>
+
+    <button type="button" ng-click="getNorris()">Cargar Facts</button>
+
+    <ul ng-repeat="fact in norrisFacts">
+
+        <li><label>{{fact.value}}</label> - <a ng-href="{{fact.url}}" target="_blank">Ver en ChuckNoris facts</a></li>
+
+    </ul>
+
+</div>
+
+<hr />

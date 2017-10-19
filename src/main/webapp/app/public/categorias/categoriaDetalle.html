@@ -1,0 +1,45 @@
+<div id="demo" >    
+    <form name="nabform" class="form-horizontal">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Categorías</legend>
+            <!-- Text input-->
+            <div class="form-group" ng-class="{ 'has-error': nabform.id.$invalid }">
+                <label class="col-md-4 control-label" for="id">Id</label>  
+                <div class="col-md-4">
+                    <input id="id" name="id" ng-model="vm.categoria.id" placeholder="13" class="form-control input-md" ng-disabled="true" type="text" />
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group" ng-class="{ 'has-error': nabform.title.$invalid }">
+                <label class="col-md-4 control-label" for="nombre">Nombre</label>  
+                <div class="col-md-4">
+                    <input id="nombre" name="nombre" ng-model="vm.categoria.nombre" placeholder="Nombre de la Categoría" class="form-control input-md" required="" type="text" />
+
+                </div>
+            </div>
+            
+            <!-- Textarea -->
+            <div class="form-group" ng-class="{ 'has-error': nabform.body.$invalid }">
+                <label class="col-md-4 control-label" for="body">Descripción</label>
+                <div class="col-md-4">                     
+                    <textarea class="form-control" id="body" name="body" ng-model="vm.categoria.descripcion" required="">Descripción de la categoría</textarea>
+                </div>
+            </div>
+
+            <!-- Button (Double) -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="ok"></label>
+                <div class="col-md-8">
+                    <button id="ok" name="ok" class="btn btn-success" ng-click="vm.guardar()" ng-disabled="nabform.$invalid">Guardar</button>
+                    <button id="cancel" name="cancel" class="btn btn-default" ng-click="vm.cancel()">Cancelar</button>
+                    <button ng-if="vm.categoria.id" id="delete" name="delete" class="btn btn-danger" ng-click="vm.delete()">Eliminar</button>                    
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+</div>

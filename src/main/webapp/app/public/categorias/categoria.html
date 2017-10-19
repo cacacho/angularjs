@@ -1,0 +1,27 @@
+<div id="demo">
+    <!-- Button (Double) -->
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="ok"></label>
+        <div class="col-md-8">
+            <button id="ok" name="ok" class="btn btn-success" ng-click="vm.search()">Buscar</button>
+             <a id="new" ui-sref="public.categorias.new" class="btn btn-primary">
+                Nueva Categoria
+            </a>
+        </div>
+    </div>
+    <hr />
+    <div>
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+            </tr>
+            <tr ng-repeat="a in vm.categorias">
+                <td> <a ui-sref="public.categorias.edit({ id: a.id })">Editar {{a.id}}</a></td>
+                <td>{{a.nombre}}</td>
+                <td>{{a.descripcion}}</td>
+            </tr>
+        </table>
+    </div> 
+</div>

@@ -1,0 +1,56 @@
+<div id="demo" >    
+    <form name="nabform" class="form-horizontal">
+        <fieldset>
+            <!-- Form Name -->
+            <legend>Tareas</legend>
+            <!-- Text input-->
+            <div class="form-group" ng-class="{ 'has-error': nabform.id.$invalid }">
+                <label class="col-md-4 control-label" for="id">Id Tarea</label>  
+                <div class="col-md-4">
+                    <input id="id" name="id" ng-model="vm.tarea.id" placeholder="Se asignará automáticamente" class="form-control input-md" ng-disabled="true" type="text" />
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group" ng-class="{ 'has-error': nabform.title.$invalid }">
+                <label class="col-md-4 control-label" for="title">Titulo</label>  
+                <div class="col-md-4">
+                    <input id="title" name="title" ng-model="vm.tarea.titulo" placeholder="¿Qué debes hacer?" class="form-control input-md" required="" type="text" />
+                </div>
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group" ng-class="{ 'has-error': nabform.body.$invalid }">
+                <label class="col-md-4 control-label" for="body">Descripción</label>
+                <div class="col-md-4">                     
+                    <textarea class="form-control" id="body" name="body" ng-model="vm.tarea.descripcion" required="">Describe tu tarea</textarea>
+                </div>
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group" ng-class="{ 'has-error': nabform.body.$invalid }">
+                <label class="col-md-4 control-label" for="fecha">Fecha/Hora límite</label>
+                <div class="col-md-4">                     
+                    <input id="fecha" name="fecha" ng-model="vm.tarea.fechaLimite" placeholder="¿Qué debes hacer?" class="form-control input-md" required="" type="datetime-local" />
+                </div>
+            </div>
+
+            <!-- Select -->
+            <div class="form-group" ng-class="{ 'has-error': nabform.body.$invalid }">
+                <label class="col-md-4 control-label" for="categoria">Categoria</label>
+                <div class="col-md-4">
+                    <select ng-model="vm.tarea.categoria.id" ng-options="item.id as item.nombre for item in vm.categorias" id="categoria" name="categoria" required=""></select>
+                </div>
+            </div>
+
+            <!-- Button (Double) -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="ok"></label>
+                <div class="col-md-8">
+                    <button id="ok" name="ok" class="btn btn-success" ng-click="vm.save()" ng-disabled="nabform.$invalid">Guardar</button>
+                    <button id="cancel" name="cancel" class="btn btn-default" ng-click="vm.cancel()">Cancelar</button>
+                    <button ng-if="vm.tarea.id" id="delete" name="delete" class="btn btn-danger" ng-click="vm.delete()">Eliminar</button>                                    </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

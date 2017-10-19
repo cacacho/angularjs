@@ -1,0 +1,7 @@
+<p ng-class="item.logo != '' && 'text-success' || 'text-danger' "><img ng-if="item.logo !=''" ng-src="{{item.logo}}" width="35px" /> <br ng-if="item.logo !=''"/>
+        {{ item.name | mirror }} -
+        {{ item.birthday | date:'dd-MM-yyyy' }} -
+        <a ng-href="{{item.homepage}}" >Website</a>
+</p>
+<br/>
+
