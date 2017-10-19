@@ -31,19 +31,28 @@ public class TareaDao {
         return em.find(Tarea.class, id);
     }
 
+    public List<Tarea> findByIdCategoria(int id) {
+        TypedQuery<Tarea> findQuery = em.createQuery("SELECT DISTINCT p FROM Tarea p WHERE p.categoria.id = :id ORDER BY p.id", Tarea.class).setParameter("id", id);
+        return findQuery.getResultList();
+    }
+
     public Tarea update(Tarea entity) {
         return em.merge(entity);
     }
 
-    public List<Tarea> listAll(Integer startPosition, Integer maxResult) {
-        TypedQuery<Tarea> findAllQuery = em.createQuery(
-            "SELECT DISTINCT p FROM Tarea p ORDER BY p.id", Tarea.class);
+    public List<Tarea> listAll(Integer startPosition, Integer maxResult, Integer id) {
+        TypedQuery<Tarea> findQuery;
+        if (id != null)
+            findQuery = em.createQuery("SELECT DISTINCT p FROM Tarea p WHERE p.categoria.id = :id ORDER BY p.id", Tarea.class).setParameter("id", id);
+        else
+            findQuery = em.createQuery("SELECT DISTINCT p FROM Tarea p ORDER BY p.id", Tarea.class);
+        
         if (startPosition != null) {
-            findAllQuery.setFirstResult(startPosition);
+            findQuery.setFirstResult(startPosition);
         }
         if (maxResult != null) {
-            findAllQuery.setMaxResults(maxResult);
+            findQuery.setMaxResults(maxResult);
         }
-        return findAllQuery.getResultList();
+        return findQuery.getResultList();
     }
 }
