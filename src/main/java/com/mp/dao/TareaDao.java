@@ -40,10 +40,12 @@ public class TareaDao {
         return em.merge(entity);
     }
 
-    public List<Tarea> listAll(Integer startPosition, Integer maxResult, Integer id) {
+    public List<Tarea> listAll(Integer startPosition, Integer maxResult, Integer id, String busqueda) {
         TypedQuery<Tarea> findQuery;
         if (id != null)
             findQuery = em.createQuery("SELECT DISTINCT p FROM Tarea p WHERE p.categoria.id = :id ORDER BY p.id", Tarea.class).setParameter("id", id);
+        else if (busqueda != null)
+            findQuery = em.createQuery("SELECT DISTINCT p FROM Tarea p WHERE (p.titulo LIKE :busqueda OR p.descripcion LIKE :busqueda) ORDER BY p.id", Tarea.class).setParameter("busqueda", "%" + busqueda + "%");            
         else
             findQuery = em.createQuery("SELECT DISTINCT p FROM Tarea p ORDER BY p.id", Tarea.class);
         

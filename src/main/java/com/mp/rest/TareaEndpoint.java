@@ -67,9 +67,10 @@ public class TareaEndpoint {
     @GET
     public List<Tarea> listAll(@QueryParam("start") Integer startPosition,
         @QueryParam("max") Integer maxResult,
-        @QueryParam("idCategoria") Integer idCategoria) {
+        @QueryParam("idCategoria") Integer idCategoria,
+        @QueryParam("busqueda") String busqueda) {
         
-        final List<Tarea> results = tareaService.listAll(startPosition, maxResult, idCategoria);
+        final List<Tarea> results = tareaService.listAll(startPosition, maxResult, idCategoria, busqueda);
         return results;
     }
 
