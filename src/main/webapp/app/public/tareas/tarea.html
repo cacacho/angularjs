@@ -3,7 +3,7 @@
     <div class="form-group">
         <label class="col-md-4 control-label" for="ok"></label>
         <div class="col-md-8">
-            <button id="ok" name="ok" class="btn btn-success" ng-click="vm.search()">Buscar</button>
+            <button id="ok" name="ok" class="btn btn-info" ng-click="vm.search()">Buscar</button>
             <a id="new" ui-sref="public.tareas.new" class="btn btn-primary">
                 Nueva Tarea
             </a>
@@ -19,6 +19,7 @@
                 <th>Fecha y Hora Límite</th>
                 <th>Estado</th>
                 <th>Categoria</th>
+                <th>Realizada</th>
             </tr>
             <tr ng-repeat="p in vm.tareas">
             	<td> <a ui-sref="public.tareas.edit({ id: p.id })">Editar {{p.id}}</a></td>
@@ -27,6 +28,7 @@
                 <td>{{p.fechaLimite | date:'dd-MM-yyyy HH:mm' }}</td>
                 <td>{{vm.evaluateState(p.finalizada)}}</td>
                 <td>{{p.categoria.nombre}}</td>
+                <td>{{p.finalizada }} <input type="checkbox" ng-model="p.finalizada"> </td>
             </tr>
         </table>
     </div> 

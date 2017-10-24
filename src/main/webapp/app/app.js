@@ -6,7 +6,9 @@ var module = angular.module('mpApp', [
   'mpApp.public',
   'mpApp.ui',
   'ngResource',
-  'oc.lazyLoad'
+  'oc.lazyLoad',
+  'ui.bootstrap',
+  'angularModalService'
 ]);
 
 module.config(function($locationProvider, $stateProvider) {

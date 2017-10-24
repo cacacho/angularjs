@@ -31,7 +31,12 @@
             <div class="form-group" ng-class="{ 'has-error': nabform.body.$invalid }">
                 <label class="col-md-4 control-label" for="fecha">Fecha/Hora límite</label>
                 <div class="col-md-4">                     
-                    <input id="fecha" name="fecha" ng-model="vm.tarea.fechaLimite" placeholder="¿Qué debes hacer?" class="form-control input-md" required="" type="datetime-local" />
+                    <input type="date" uib-datepicker-popup ng-model="vm.tarea.fechaLimite" 
+                           class="form-control" id="dateOfBirth" 
+                           name="dateOfBirth" placeholder="DoB" is-open="status.opened" 
+                           ng-click="status.opened = true" 
+                           ng-focus="status.opened = true" ng-required="true" close-text="Close"
+                           />
                 </div>
             </div>
 
@@ -49,7 +54,9 @@
                 <div class="col-md-8">
                     <button id="ok" name="ok" class="btn btn-success" ng-click="vm.save()" ng-disabled="nabform.$invalid">Guardar</button>
                     <button id="cancel" name="cancel" class="btn btn-default" ng-click="vm.cancel()">Cancelar</button>
-                    <button ng-if="vm.tarea.id" id="delete" name="delete" class="btn btn-danger" ng-click="vm.delete()">Eliminar</button>                                    </div>
+                    <button ng-if="vm.tarea.id" id="delete" name="delete" class="btn btn-danger" ng-click="vm.delete()">Eliminar</button>                                    
+                    <button ng-click="vm.mostrarModal()">Ver Modal</button>
+                </div>
             </div>
         </fieldset>
     </form>
