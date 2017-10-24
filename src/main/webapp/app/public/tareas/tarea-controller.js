@@ -2,10 +2,13 @@
 var module = angular.module('mpApp.public');
 
 
-module.controller('searchTareaController', function ($log, tareaResource) {
+module.controller('searchTareaController', function ($log, $stateParams, $location, tareaResource, $state, categoriaResource, $uibModal, $document) {
     var vm = this;
+    vm.location = $location.path();
+    vm.tarea = {};
     
     vm.tareas = [];
+    categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });
     
     vm.search = function(){
         var successCallback = function(data, responseHeaders) {
@@ -16,8 +19,20 @@ module.controller('searchTareaController', function ($log, tareaResource) {
             $log.error('search error ' + responseHeaders);
         };
 
-         tareaResource.queryAll({"max":100}, successCallback, errorCallback);
+        tareaResource.queryAll({"max":100}, successCallback, errorCallback);
     };
+
+    vm.searchT = function(searchText){
+        var successCallback = function(data, responseHeaders) {
+            vm.tareas = data;
+        };
+
+        var errorCallback = function(responseHeaders) {
+            $log.error('search error ' + responseHeaders);
+        };
+
+        tareaResource.queryAll({"max":100, "busqueda":searchText}, successCallback, errorCallback);
+    }
 
     vm.evaluateState = function(value){
         if (value)
@@ -26,13 +41,62 @@ module.controller('searchTareaController', function ($log, tareaResource) {
     }
     
     vm.search();
+
+    vm.open = function(tarea)
+    {
+        if (tarea)
+        {
+            var parentElem = angular.element($document[0].querySelector('.bodyclass '));
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/public/tareas/tareaDetalle.html',
+                controller: 'editTareaController',
+                controllerAs: 'vm',
+                size: 'lg',
+                appendTo: parentElem,
+                resolve: {
+                    tarea: function () {
+                        return tarea;
+                    }
+                }
+            });
+        }
+        else
+        {            
+            var parentElem = angular.element($document[0].querySelector('.bodyclass '));
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'app/public/tareas/tareaDetalle.html',
+                controller: 'newTareaController',
+                controllerAs: 'vm',
+                size: 'lg',
+                appendTo: parentElem
+            });
+        }
+  
+        modalInstance.result.then(function (tareas) { vm.tareas = tareas, 
+            categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); }); }, function () {  });
+    }
+
+    vm.cargarCategorias = function(categoria) {
+        var successCallback = function(data, responseHeaders) {
+            vm.tareas = data;
+        };
+
+        var errorCallback = function(responseHeaders) {
+            $log.error('search error ' + responseHeaders);
+        };
+
+         tareaResource.queryAll({"max":100, "idCategoria":categoria.id}, successCallback, errorCallback);
+    }
 });
 
 
-module.controller('editTareaController', function ($log, $stateParams, $location, tareaResource, $state, categoriaResource) {
+module.controller('editTareaController', function (tarea, $log, $stateParams, $location, tareaResource, $state, categoriaResource, $uibModalInstance) {
     var vm = this;
     vm.location = $location.path();
-    vm.tarea = {};
+    vm.tarea = tarea;
+    vm.categoria = {};
 
     categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });
 
@@ -47,14 +111,14 @@ module.controller('editTareaController', function ($log, $stateParams, $location
             $log.error('error while searching ' + responseHeaders);
         };
         
-        tareaResource.query({id:$stateParams.id}, successCallback, errorCallback);
+        tareaResource.query({id:tarea.id}, successCallback, errorCallback);
     };
 
     vm.save = function () {
 
         var successCallback = function(data, responseHeaders) {
             $log.info('updating successfuly ' + data);
-            $state.go('public.tareas');
+            vm.cargarCategorias(data.categoria);
         };
 
         var errorCallback = function(responseHeaders) {
@@ -69,7 +133,7 @@ module.controller('editTareaController', function ($log, $stateParams, $location
 
         var successCallback = function(data, responseHeaders) {
             $log.info('removed successfuly ' + data);
-            $state.go('public.tareas');
+            vm.cargarCategorias(data.categoria);
         };
 
         var errorCallback = function(responseHeaders) {
@@ -82,16 +146,74 @@ module.controller('editTareaController', function ($log, $stateParams, $location
     
     vm.cancel = function () {
         vm.tarea = {};
-        $state.go('public.tareas');
+        $uibModalInstance.dismiss('cancel');
     };
     
     vm.get();
 
+    vm.dateOptions = 
+    {
+        formatYear: 'yyyy',
+        startingDay: 1
+    };
+
+    vm.disabled = function(date, mode) 
+    {
+        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
+
+    vm.open = function($event) 
+    {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        vm.opened = true;
+    };
+
+    vm.cargarCategorias = function(categoria) {
+        var successCallback = function(data, responseHeaders) {
+            $uibModalInstance.close(data);
+        };
+
+        var errorCallback = function(responseHeaders) {
+            $log.error('search error ' + responseHeaders);
+        };
+
+        categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });        
+        tareaResource.queryAll({"max":100, "idCategoria":categoria.id}, successCallback, errorCallback);
+    }
+
+    vm.crearCategoria = function() {
+        vm.estaCreandoCategoria = true;
+    }
+
+    vm.guardarC = function () {
+
+        var successCallback = function(data, responseHeaders) {
+            $log.info('saved successfuly ' + data);
+            vm.estaCreandoCategoria = false;
+            categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });
+        };
+
+        var errorCallback = function(responseHeaders) {
+            $log.error('error while persisting');
+        };
+
+        categoriaResource.save(vm.categoria, successCallback, errorCallback);
+
+    };
+    
+    vm.cancelC = function () {
+        vm.categoria = {};
+        vm.estaCreandoCategoria = false;
+    };
+
 });
 
-module.controller('newTareaController', function ($log, $location, tareaResource, $state, categoriaResource) {
+module.controller('newTareaController', function ($log, $location, tareaResource, $state, categoriaResource, $uibModalInstance) {
     var vm = this;
     vm.tarea = {};
+    vm.categoria = {};
     
     categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });
 
@@ -99,7 +221,7 @@ module.controller('newTareaController', function ($log, $location, tareaResource
 
         var successCallback = function(data, responseHeaders) {
             $log.info('saved successfuly ' + data);
-            $state.go('public.tareas');
+            vm.cargarCategorias(data.categoria);
         };
 
         var errorCallback = function(responseHeaders) {
@@ -107,12 +229,67 @@ module.controller('newTareaController', function ($log, $location, tareaResource
         };
 
         tareaResource.save(vm.tarea, successCallback, errorCallback);
-
     };
     
     vm.cancel = function () {
         vm.tarea = {};
-        $state.go('public.tareas');
+        $uibModalInstance.dismiss('cancel');
+    };
+
+    vm.dateOptions = 
+    {
+        formatYear: 'yyyy',
+        startingDay: 1
+    };
+
+    vm.disabled = function(date, mode) 
+    {
+        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
+
+    vm.open = function($event) 
+    {
+        $event.preventDefault();
+        $event.stopPropagation();
+        vm.opened = true;
+    };
+
+    vm.cargarCategorias = function(categoria) {
+        var successCallback = function(data, responseHeaders) {
+            $uibModalInstance.close(data);
+        };
+
+        var errorCallback = function(responseHeaders) {
+            $log.error('search error ' + responseHeaders);
+        };
+
+        categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });
+        tareaResource.queryAll({"max":100, "idCategoria":categoria.id}, successCallback, errorCallback);
+    }
+
+    vm.crearCategoria = function() {
+        vm.estaCreandoCategoria = true;
+    }
+
+    vm.guardarC = function () {
+
+        var successCallback = function(data, responseHeaders) {
+            $log.info('saved successfuly ' + data);
+            vm.estaCreandoCategoria = false;
+            categoriaResource.queryAll({"max":1000}, (data)=> { vm.categorias = data }, (responseHeaders)=> { $log.error('search categories error ' + responseHeaders); });            
+        };
+
+        var errorCallback = function(responseHeaders) {
+            $log.error('error while persisting');
+        };
+
+        categoriaResource.save(vm.categoria, successCallback, errorCallback);
+
+    };
+    
+    vm.cancelC = function () {
+        vm.categoria = {};
+        vm.estaCreandoCategoria = false;
     };
 
 });

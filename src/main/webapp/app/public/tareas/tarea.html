@@ -1,14 +1,27 @@
 <div id="demo">
-    <!-- Button (Double) -->
-    <div class="form-group">
-        <label class="col-md-4 control-label" for="ok"></label>
-        <div class="col-md-8">
-            <button id="ok" name="ok" class="btn btn-success" ng-click="vm.search()">Buscar</button>
-            <a id="new" ui-sref="public.tareas.new" class="btn btn-primary">
-                Nueva Tarea
-            </a>
+
+    <h2>Elige una categoría para filtrar</h2>
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
+            <ul class="nav navbar-nav">
+                <li ng-repeat="categoria in vm.categorias" ng-click="vm.cargarCategorias(categoria)"><a>Filtrar por {{categoria.nombre}}</a></li>
+            </ul>
+        </div>                    
+    </nav>
+
+    <h2>Búsqueda</h2>
+    <div class="row">
+        <div class="col-xs-8">
+            <input ng-model="vm.searchText" placeholder="Búsqueda de Tareas por título o descripción..." class="form-control input-md" required="" type="text" />
+        </div>
+        <div class="col-xs-4">
+            <a class="btn btn-success" ng-click="vm.searchT(vm.searchText)">Buscar</a>
+            <button id="ok" name="ok" class="btn btn-success" ng-click="vm.search()">Ver Todas</button>
+            <a id="new" ng-click="vm.open()" class="btn btn-primary">Nueva Tarea</a>
         </div>
     </div>
+    <br/>
+
     <hr />
     <div>
         <table class="table">
@@ -21,7 +34,7 @@
                 <th>Categoria</th>
             </tr>
             <tr ng-repeat="p in vm.tareas">
-            	<td> <a ui-sref="public.tareas.edit({ id: p.id })">Editar {{p.id}}</a></td>
+            	<td> <a ng-click="vm.open(p)">Editar {{p.id}}</a></td>
                 <td>{{p.titulo}}</td>
                 <td>{{p.descripcion}}</td>
                 <td>{{p.fechaLimite | date:'dd-MM-yyyy HH:mm' }}</td>
